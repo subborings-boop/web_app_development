@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.title }} - 食譜收藏夾{% endblock %}
+
+{% block content %}
+<div class="row mt-4 mb-5">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow border-0 overflow-hidden">
+            <div class="bg-primary text-white p-5 text-center">
+                <h1 class="display-4 fw-bold mb-3">{{ recipe.title }}</h1>
+                <p class="lead mb-0 opacity-75">{{ recipe.description or '單純分享好味道，不需多言。' }}</p>
+                <div class="mt-4">
+                    {% if not recipe.is_public %}
+                        <span class="badge bg-danger rounded-pill px-3 py-2"><i class="bi bi-lock-fill"></i> 私密食譜</span>
+                    {% else %}
+                        <span class="badge bg-success rounded-pill px-3 py-2"><i class="bi bi-globe"></i> 公開食譜</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card-body p-4 p-md-5 bg-white">
+                
+                <h4 class="fw-bold mb-4 border-bottom pb-2 text-primary">所需食材清單</h4>
+                <div class="row mb-5">
+                    <div class="col-12">
+                        {% if recipe.ingredients %}
+                            <ul class="list-group list-group-flush border rounded shadow-sm">
+                            {% for ing in recipe.ingredients %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center fw-semibold py-3">
+                                    {{ ing.name }}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted bg-light p-3 rounded">這道菜似乎不需要特別指定的食材！全憑廚師的感覺！</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <h4 class="fw-bold mb-4 border-bottom pb-2 text-primary">料理步驟</h4>
+                <div class="bg-light p-4 rounded shadow-sm">
+                    <div style="white-space: pre-wrap; line-height: 1.8;" class="fs-5 text-dark">{{ recipe.steps }}</div>
+                </div>
+                
+                <div class="text-end text-muted mt-5 small">
+                    <p class="mb-0">由用戶 ID <strong>{{ recipe.user_id }}</strong> 發表於 {{ recipe.created_at }}</p>
+                </div>
+            </div>
+            
+            <!-- 權限操作區：如果當前使用者是建立者，顯示編輯與刪除 -->
+            {% if session.get('user_id') == recipe.user_id %}
+            <div class="card-footer bg-light p-4 border-top">
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{{ url_for('recipe.edit_page', recipe_id=recipe.id) }}" class="btn btn-warning px-4 fw-bold text-dark">
+                        編輯內容
+                    </a>
+                    <form action="{{ url_for('recipe.delete', recipe_id=recipe.id) }}" method="POST" onsubmit="return confirm('確定要刪除這道嘔心瀝血的食譜嗎？此動作無法復原！');">
+                        <button type="submit" class="btn btn-danger px-4 fw-bold">
+                            刪除食譜
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

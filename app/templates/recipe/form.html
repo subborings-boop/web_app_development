@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}{% if recipe %}編輯食譜{% else %}新增食譜{% endif %} - 食譜收藏夾{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mb-5">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm border-0 mt-3">
+            <div class="card-header bg-dark text-white p-3">
+                <h4 class="mb-0 text-center fw-bold">
+                    {% if recipe %}📝 編輯食譜：{{ recipe.title }}{% else %}✨ 新增獨家食譜{% endif %}
+                </h4>
+            </div>
+            <div class="card-body p-4 bg-light">
+                <form action="{% if recipe %}{{ url_for('recipe.update', recipe_id=recipe.id) }}{% else %}{{ url_for('recipe.create') }}{% endif %}" method="POST">
+                    
+                    <div class="mb-4">
+                        <label for="title" class="form-label fw-bold">食譜名稱 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg" id="title" name="title" required value="{{ recipe.title if recipe else '' }}" placeholder="這道菜的響亮名號">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="form-label fw-bold">簡短介紹 (選填)</label>
+                        <textarea class="form-control" id="description" name="description" rows="2" placeholder="敘述一下這道菜的特色吧">{{ recipe.description if recipe else '' }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold d-block">使用食材 (可複選)</label>
+                        <div class="d-flex flex-wrap gap-2 border p-3 rounded bg-white" style="max-height: 200px; overflow-y: auto;">
+                            {% for ing in ingredients %}
+                            <div class="form-check form-check-inline m-0">
+                                <input class="form-check-input" type="checkbox" name="ingredients" id="ing_{{ ing.id }}" value="{{ ing.id }}" {% if ing.id in selected_ing_ids %}checked{% endif %}>
+                                <label class="form-check-label" style="cursor:pointer;" for="ing_{{ ing.id }}">
+                                    {{ ing.name }}
+                                </label>
+                            </div>
+                            {% else %}
+                            <span class="text-muted small">系統還沒有食材資料。</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="steps" class="form-label fw-bold">料理步驟 <span class="text-danger">*</span></label>
+                        <textarea class="form-control font-monospace" id="steps" name="steps" rows="8" required placeholder="步驟一：...&#10;步驟二：...">{{ recipe.steps if recipe else '' }}</textarea>
+                    </div>
+
+                    <div class="mb-4 form-check form-switch fs-5">
+                        <input class="form-check-input" type="checkbox" id="is_public" name="is_public" value="1" {% if not recipe or recipe.is_public %}checked{% endif %}>
+                        <label class="form-check-label user-select-none" for="is_public">向所有人公開這份食譜</label>
+                    </div>
+
+                    <hr class="my-4">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% if recipe %}{{ url_for('recipe.detail', recipe_id=recipe.id) }}{% else %}{{ url_for('main.index') }}{% endif %}" class="btn btn-outline-secondary">取消放棄</a>
+                        <button type="submit" class="btn btn-primary px-5 fw-bold">{% if recipe %}更新儲存{% else %}建立食譜！{% endif %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}首頁 - 食譜收藏夾{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm text-center border">
+    <div class="container-fluid py-4">
+        <h1 class="display-5 fw-bold text-dark">今天想做點什麼？</h1>
+        <p class="col-md-8 mx-auto fs-5 text-secondary mt-3">管理你的專屬食譜，或是從手中現有的食材尋找料理靈感！</p>
+        
+        <!-- 搜尋框 -->
+        <form action="{{ url_for('recipe.list_recipes') }}" method="GET" class="d-flex justify-content-center mt-4">
+            <div class="input-group w-50">
+                <input type="text" name="q" class="form-control form-control-lg border-primary" placeholder="輸入食譜名稱關鍵字...">
+                <button class="btn btn-primary btn-lg px-4" type="submit">搜尋</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row align-items-center mb-5 bg-primary text-white rounded p-4 shadow-sm mx-0">
+    <div class="col-md-8">
+        <h3 class="mb-1">打開冰箱看著食材發呆嗎？</h3>
+        <p class="mb-0 text-white-50">輸入你現有的幾樣材料，我們來告訴你還能變出什麼菜！</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('recipe.search_by_ingredients') }}" class="btn btn-light btn-lg text-primary fw-bold">開始組合尋找</a>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12 mb-3">
+        <h3 class="border-bottom pb-2">最熱門公開食譜</h3>
+    </div>
+    {% if recipes %}
+        {% for r in recipes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <!-- 若有封面功能這裡可放 <img> -->
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ r.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">作者ID: {{ r.user_id }}</h6>
+                    <p class="card-text text-truncate">{{ r.description or '這名廚師很酷，什麼都沒留下。' }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top pb-3">
+                    <a href="{{ url_for('recipe.detail', recipe_id=r.id) }}" class="btn btn-outline-primary btn-sm">查看食譜</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-md-12 text-center py-5">
+            <p class="text-muted fs-5">目前還沒有任何人分享公開食譜喔！</p>
+            {% if session.get('user_id') %}
+            <a href="{{ url_for('recipe.new_page') }}" class="btn btn-primary mt-2">搶頭香，新增第一篇！</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

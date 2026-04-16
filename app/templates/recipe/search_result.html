@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}食材組合搜尋 - 食譜收藏夾{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h2 class="fw-bold mb-3">🛒 冰箱找巧思：食材組合搜尋</h2>
+        <p class="text-secondary fs-5">勾選你目前擁有的食材，我們會找出「剛好包含這些所有選擇」的食譜。</p>
+    </div>
+</div>
+
+<div class="row mb-5 justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 bg-light rounded">
+                <form action="{{ url_for('recipe.search_by_ingredients') }}" method="GET">
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        {% for ing in ingredients %}
+                        <div class="form-check form-check-inline bg-white px-3 py-2 border rounded shadow-sm m-0">
+                            <input class="form-check-input ms-0 me-2 mt-1" type="checkbox" name="ing" id="ing_{{ ing.id }}" value="{{ ing.id }}" {% if ing.id in selected_ids %}checked{% endif %}>
+                            <label class="form-check-label user-select-none" style="cursor:pointer;" for="ing_{{ ing.id }}">
+                                {{ ing.name }}
+                            </label>
+                        </div>
+                        {% else %}
+                        <p class="text-muted w-100 mb-0">系統內尚未登錄任何食材可供篩選。</p>
+                        {% endfor %}
+                    </div>
+                    {% if ingredients %}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success btn-lg px-5 shadow">找出能做的菜！</button>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="row mt-4">
+    <div class="col-12 mb-3">
+        <h4>搜尋結果 <span class="badge bg-primary rounded-pill">{{ recipes|length }}</span></h4>
+    </div>
+    {% if not selected_ids %}
+        <div class="col-12 py-4 text-center">
+            <p class="text-muted">請在上方勾選食材以開始組合搜尋。</p>
+        </div>
+    {% elif recipes %}
+        {% for r in recipes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow border-0 border-top border-3 border-success">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ r.title }}</h5>
+                    <p class="card-text text-secondary">{{ r.description }}</p>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3">
+                    <a href="{{ url_for('recipe.detail', recipe_id=r.id) }}" class="btn btn-outline-success w-100">查看這道菜</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12 py-5 text-center bg-white border rounded">
+            <h5 class="text-muted">找不到符合這套食材組合的公開食譜。</h5>
+            <p class="text-secondary small">或許可以嘗試減少預選食材的數量以放寬搜尋條件。</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

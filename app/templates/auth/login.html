@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}登入 - 食譜收藏夾{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-body p-5">
+                <h3 class="card-title text-center mb-4 fw-bold">會員登入</h3>
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-muted">電子信箱</label>
+                        <input type="email" class="form-control form-control-lg" id="email" name="email" required placeholder="name@example.com">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label text-muted">密碼</label>
+                        <input type="password" class="form-control form-control-lg" id="password" name="password" required placeholder="••••••••">
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">登入</button>
+                    </div>
+                </form>
+                <div class="text-center mt-4">
+                    <span class="text-muted">還沒有專屬的收藏空間嗎？</span>
+                    <a href="{{ url_for('auth.register_page') }}" class="fw-bold text-decoration-none">點此馬上註冊</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}註冊帳號 - 食譜收藏夾{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-body p-5">
+                <h3 class="card-title text-center mb-4 fw-bold">啟用你的專屬收藏夾</h3>
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label text-muted">要怎麼稱呼你</label>
+                        <input type="text" class="form-control form-control-lg" id="username" name="username" required placeholder="如：特級廚師">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-muted">電子信箱 (將作為登入帳號)</label>
+                        <input type="email" class="form-control form-control-lg" id="email" name="email" required placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label text-muted">設定密碼</label>
+                        <input type="password" class="form-control form-control-lg" id="password" name="password" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label text-muted">再次確認密碼</label>
+                        <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">立即註冊</button>
+                    </div>
+                </form>
+                <div class="text-center mt-4">
+                    <span class="text-muted">已經有帳號了？</span>
+                    <a href="{{ url_for('auth.login_page') }}" class="fw-bold text-decoration-none">點此登入</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
